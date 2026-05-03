@@ -71,10 +71,16 @@ body{font-family:var(--font);font-size:14px;color:var(--color-text-primary);back
 .wf-amt{font-size:12px;font-family:var(--mono);font-weight:500;width:100px;flex-shrink:0}
 .wf-divider{height:1px;background:var(--color-border-secondary);margin:10px 0 10px 165px}
 .wf-note{font-size:11px;color:var(--color-text-tertiary);margin:-4px 0 8px 165px;font-style:italic}
-.loan-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+/* Loan rows */
+.loan-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
 .loan-row:last-child{border-bottom:none}
-.pill{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500}
+.loan-name{font-weight:500;flex:1;font-size:13px}
+.loan-amt{font-family:var(--mono);font-weight:500;flex-shrink:0;min-width:90px;text-align:right;font-size:13px}
+.loan-section-label{font-size:10px;font-weight:600;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;margin-top:4px}
+.loan-divider{height:1px;background:var(--color-border-tertiary);margin:10px 0 12px}
+.pill{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;flex-shrink:0}
 .pill-out{background:var(--red-bg);color:var(--red-text)}
+.pill-in{background:var(--green-bg);color:var(--green-text)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
 .form-grid.full{grid-template-columns:1fr}
 .field{display:flex;flex-direction:column;gap:5px}
@@ -158,8 +164,12 @@ body{font-family:var(--font);font-size:14px;color:var(--color-text-primary);back
 
     <div class="card"><div class="card-header"><span class="card-title">Investments</span></div><div id="inv-bars"><div class="empty">No data yet</div></div></div>
     <div class="card"><div class="card-header"><span class="card-title">Earnings by type</span></div><div id="earn-bars"><div class="empty">No data yet</div></div></div>
+
     <div class="card">
-      <div class="card-header"><span class="card-title">Open loans</span><span class="hint" style="margin-top:0">all time</span></div>
+      <div class="card-header">
+        <span class="card-title">Open loans</span>
+        <span class="hint" style="margin-top:0">all time</span>
+      </div>
       <div id="loan-list"><div class="empty">No data yet</div></div>
     </div>
   </div>
@@ -171,9 +181,9 @@ body{font-family:var(--font);font-size:14px;color:var(--color-text-primary);back
       <button class="tab" onclick="showTab('balances',this)">Balances</button>
       <button class="tab" onclick="showTab('loans',this)">Loans</button>
     </div>
-    <div id="tab-earnings"><div class="card"><div class="card-header"><span class="card-title">Add earning</span></div><div id="status-earnings"></div><div class="form-grid"><div class="field"><label>Date</label><input type="date" id="e-date"></div><div class="field"><label>Amount ₹</label><input type="number" id="e-amount" placeholder="0"></div><div class="field"><label>Type</label><select id="e-type"><option>Salary</option><option>Interest</option><option>Reward</option><option>Dividend</option><option>ITR Refund</option></select></div><div class="field"><label>Notes</label><input type="text" id="e-notes" placeholder="Optional"></div></div><button class="submit-btn" onclick="addRow('earnings')">Add to sheet →</button></div></div>
-    <div id="tab-investments" style="display:none"><div class="card"><div class="card-header"><span class="card-title">Add investment</span></div><div id="status-investments"></div><div class="form-grid"><div class="field"><label>Date</label><input type="date" id="i-date"></div><div class="field"><label>Amount ₹</label><input type="number" id="i-amount" placeholder="0"></div><div class="field"><label>Category</label><select id="i-cat"><option>Stocks</option><option>Mutual Funds</option><option>Crypto</option><option>Family Business</option><option>PPF</option><option>NPS</option><option>Gold</option></select></div><div class="field"><label>Platform</label><input type="text" id="i-platform" placeholder="e.g. Zerodha"></div></div><div class="form-grid full"><div class="field"><label>Notes</label><input type="text" id="i-notes" placeholder="Optional"></div></div><button class="submit-btn" onclick="addRow('investments')">Add to sheet →</button></div></div>
-    <div id="tab-balances" style="display:none"><div class="card"><div class="card-header"><span class="card-title">Add balance snapshot</span></div><div id="status-balances"></div><div class="form-grid"><div class="field"><label>Date</label><input type="date" id="b-date"></div><div class="field"><label>Account</label><select id="b-account"><option>HDFC Bank</option><option>Canara Bank</option><option>Cash</option></select></div><div class="field"><label>Balance ₹</label><input type="number" id="b-balance" placeholder="0"></div></div><button class="submit-btn" onclick="addRow('balances')">Add to sheet →</button></div></div>
+    <div id="tab-earnings"><div class="card"><div class="card-header"><span class="card-title">Add earning</span></div><div id="status-earnings"></div><div class="form-grid"><div class="field"><label>Date</label><input type="date" id="e-date"></div><div class="field"><label>Amount ₹</label><input type="number" id="e-amount" placeholder="0"></div><div class="field"><label>Type</label><select id="e-type"><option>Salary</option><option>Interest</option><option>Reward</option><option>Dividend</option><option>ITR Refund</option><option>Trading Gain</option></select></div><div class="field"><label>Notes</label><input type="text" id="e-notes" placeholder="Optional"></div></div><button class="submit-btn" onclick="addRow('earnings')">Add to sheet →</button></div></div>
+    <div id="tab-investments" style="display:none"><div class="card"><div class="card-header"><span class="card-title">Add investment</span></div><div id="status-investments"></div><div class="form-grid"><div class="field"><label>Date</label><input type="date" id="i-date"></div><div class="field"><label>Amount ₹</label><input type="number" id="i-amount" placeholder="0 or negative for loss/withdrawal"></div><div class="field"><label>Category</label><select id="i-cat"><option>Stocks</option><option>Mutual Funds</option><option>Crypto</option><option>Family Business</option><option>PPF</option><option>NPS</option><option>Gold</option><option>Realized Loss</option></select></div><div class="field"><label>Platform</label><input type="text" id="i-platform" placeholder="e.g. Zerodha"></div></div><div class="form-grid full"><div class="field"><label>Notes</label><input type="text" id="i-notes" placeholder="Optional"></div></div><button class="submit-btn" onclick="addRow('investments')">Add to sheet →</button></div></div>
+    <div id="tab-balances" style="display:none"><div class="card"><div class="card-header"><span class="card-title">Add balance snapshot</span></div><div id="status-balances"></div><div class="form-grid"><div class="field"><label>Date</label><input type="date" id="b-date"></div><div class="field"><label>Account</label><select id="b-account"><option>HDFC Bank</option><option>Canara Bank</option><option>Cash</option><option>Zerodha</option><option>Mudrex</option></select></div><div class="field"><label>Balance ₹</label><input type="number" id="b-balance" placeholder="0"></div></div><button class="submit-btn" onclick="addRow('balances')">Add to sheet →</button></div></div>
     <div id="tab-loans" style="display:none"><div class="card"><div class="card-header"><span class="card-title">Add loan entry</span></div><div id="status-loans"></div><div class="form-grid"><div class="field"><label>Date</label><input type="date" id="l-date"></div><div class="field"><label>Amount ₹</label><input type="number" id="l-amount" placeholder="0"></div><div class="field"><label>Type</label><select id="l-type"><option>Loan Given</option><option>Loan Repaid</option><option>Loan Taken</option><option>Loan Repaid by Me</option></select></div><div class="field"><label>Counterparty</label><input type="text" id="l-party" placeholder="Name"></div></div><div class="form-grid full"><div class="field"><label>Notes</label><input type="text" id="l-notes" placeholder="Optional"></div></div><button class="submit-btn" onclick="addRow('loans')">Add to sheet →</button></div></div>
   </div>
 
@@ -301,7 +311,7 @@ function applyCustomRange(){
 }
 function loadConfig(){
   try{
-    const s=localStorage.getItem('pf_cfg8');
+    const s=localStorage.getItem('pf_cfg9');
     if(s){
       const c=JSON.parse(s);Object.assign(cfg,c);
       document.getElementById('cfg-sheet-id').value=cfg.sheetId||'';
@@ -326,7 +336,7 @@ function saveConfig(){
   cfg.tabs.bal=document.getElementById('cfg-t-bal').value.trim();
   cfg.tabs.loan=document.getElementById('cfg-t-loan').value.trim();
   cfg.defaultFY=document.getElementById('cfg-default-fy').value;
-  try{localStorage.setItem('pf_cfg8',JSON.stringify(cfg));}catch(e){}
+  try{localStorage.setItem('pf_cfg9',JSON.stringify(cfg));}catch(e){}
   showConnStatus('Saved.','ok');
 }
 function showSection(name,btn){
@@ -420,8 +430,6 @@ function renderDashboard(){
   }
 
   const{outflow:loanOutflow,inflow:loanInflow,net:loanNet}=calcLoanAdjustment(fd.loans);
-
-  // Clean formula: Expenses = Opening + Earnings − Investments − Closing − LoanNet
   const estExpenses=totalOpening+totalEarn-totalInv-totalClosing-loanNet;
   const netWorth=totalClosing+totalInv;
 
@@ -474,59 +482,36 @@ function renderDashboard(){
   }else{bHTML='<div class="empty">No balance data</div>';}
   document.getElementById('bal-list').innerHTML=bHTML;
 
-  // ── Waterfall ──────────────────────────────────────────────────
-  // Formula: Expenses = Opening + Earnings − Investments − Closing − LoanNet
-  // All items shown directly — no derived deltas.
-  // + means adds to the "pool available to spend"
-  // − means deducts from that pool (money accounted for elsewhere)
+  // Waterfall
   const wfEl=document.getElementById('expense-waterfall');
   if(!totalEarn&&!totalInv&&!totalClosing){wfEl.innerHTML='<div class="empty">No data for this period</div>';}
   else{
-    // bar scale = largest + item
     const barMax=Math.max(totalOpening,totalEarn,totalInv,totalClosing,Math.abs(loanNet),1);
-
-    // Each row: {label, value, adds: true=adds to pool / false=deducts, color, note}
     const rows=[];
-    if(totalOpening>0) rows.push({label:'Opening balance',value:totalOpening,adds:true,color:'#185FA5',note:'Cash on hand at period start'});
+    if(totalOpening>0)rows.push({label:'Opening balance',value:totalOpening,adds:true,color:'#185FA5',note:'Cash on hand at period start'});
     rows.push({label:'Earnings',value:totalEarn,adds:true,color:'#1D9E75',note:null});
     rows.push({label:'Investments',value:totalInv,adds:false,color:'#534AB7',note:'Deployed to assets — not spent'});
     rows.push({label:'Closing balance',value:totalClosing,adds:false,color:'#888780',note:'Cash on hand at period end — not spent'});
     if(loanNet!==0){
       rows.push({
-        label: loanNet>0?'Loans given (net)':'Loans received (net)',
-        value: Math.abs(loanNet),
-        adds: loanNet<0, // net inflow → extra cash in pool → adds; net outflow → deducts
-        color: loanNet>0?'#BA7517':'#1D9E75',
-        note: loanNet>0?'Cash lent out — not an expense':'Cash received as loan — not income'
+        label:loanNet>0?'Loans given (net)':'Loans received (net)',
+        value:Math.abs(loanNet),
+        adds:loanNet<0,
+        color:loanNet>0?'#BA7517':'#1D9E75',
+        note:loanNet>0?'Cash lent out — not an expense':'Cash received as loan — not income'
       });
     }
-
     let wHTML='<div style="margin-bottom:14px">';
     rows.forEach(s=>{
       if(s.value===0)return;
       const w=Math.max(3,Math.round(s.value/barMax*100));
       const prefix=s.adds?'+':'−';
       const amtColor=s.adds?'var(--green)':'var(--red)';
-      wHTML+=`<div class="wf-step">
-        <div class="wf-label">${prefix} ${s.label}</div>
-        <div class="wf-track">
-          <div class="wf-bar" style="width:${w}%;background:${s.color}20;border:1px solid ${s.color}55">
-            <span style="font-size:11px;color:${s.color};font-weight:500;font-family:var(--mono)">${fmt(s.value)}</span>
-          </div>
-        </div>
-        <div class="wf-amt" style="color:${amtColor}">${prefix}${fmt(s.value)}</div>
-      </div>`;
+      wHTML+=`<div class="wf-step"><div class="wf-label">${prefix} ${s.label}</div><div class="wf-track"><div class="wf-bar" style="width:${w}%;background:${s.color}20;border:1px solid ${s.color}55"><span style="font-size:11px;color:${s.color};font-weight:500;font-family:var(--mono)">${fmt(s.value)}</span></div></div><div class="wf-amt" style="color:${amtColor}">${prefix}${fmt(s.value)}</div></div>`;
       if(s.note)wHTML+=`<div class="wf-note">${s.note}</div>`;
     });
     wHTML+='</div>';
-    wHTML+=`<div class="wf-divider"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 2px">
-      <div>
-        <div style="font-size:13px;font-weight:500">Estimated expenses</div>
-        <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px;font-family:var(--mono)">Opening + Earnings − Investments − Closing − Loan net</div>
-      </div>
-      <span style="font-size:22px;font-weight:600;letter-spacing:-0.5px;font-family:var(--mono);color:${estExpenses>=0?'var(--amber)':'var(--green)'}">${fmt(Math.max(0,estExpenses))}</span>
-    </div>`;
+    wHTML+=`<div class="wf-divider"></div><div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 2px"><div><div style="font-size:13px;font-weight:500">Estimated expenses</div><div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px;font-family:var(--mono)">Opening + Earnings − Investments − Closing − Loan net</div></div><span style="font-size:22px;font-weight:600;letter-spacing:-0.5px;font-family:var(--mono);color:${estExpenses>=0?'var(--amber)':'var(--green)'}">${fmt(Math.max(0,estExpenses))}</span></div>`;
     if(estExpenses<0)wHTML+=`<p class="hint" style="margin-top:8px">Negative result — likely incomplete data for this period.</p>`;
     wfEl.innerHTML=wHTML;
   }
@@ -534,9 +519,9 @@ function renderDashboard(){
   // Investment bars
   const invBycat={};fd.investments.forEach(r=>{invBycat[r.cat]=(invBycat[r.cat]||0)+r.amount;});
   const invEntries=Object.entries(invBycat).sort((a,b)=>b[1]-a[1]);
-  const invMax=invEntries.length?invEntries[0][1]:1;
+  const invMax=invEntries.length?Math.max(...invEntries.map(e=>Math.abs(e[1]))):1;
   document.getElementById('inv-bars').innerHTML=invEntries.length
-    ?invEntries.map((e,i)=>`<div class="bar-row"><div class="bar-label">${e[0]}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(e[1]/invMax*100)}%;background:${colors[i%colors.length]}"></div></div><div class="bar-val" style="color:${colors[i%colors.length]}">${fmt(e[1])}</div></div>`).join('')
+    ?invEntries.map((e,i)=>`<div class="bar-row"><div class="bar-label">${e[0]}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(Math.abs(e[1])/invMax*100)}%;background:${e[1]<0?'var(--red)':colors[i%colors.length]}"></div></div><div class="bar-val" style="color:${e[1]<0?'var(--red)':colors[i%colors.length]}">${e[1]<0?'-':''}${fmt(e[1])}</div></div>`).join('')
     :'<div class="empty">No data for this period</div>';
 
   // Earnings bars
@@ -547,16 +532,44 @@ function renderDashboard(){
     ?earnEntries.map((e,i)=>`<div class="bar-row"><div class="bar-label">${e[0]}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(e[1]/earnMax*100)}%;background:${colors[i%colors.length]}"></div></div><div class="bar-val" style="color:${colors[i%colors.length]}">${fmt(e[1])}</div></div>`).join('')
     :'<div class="empty">No data for this period</div>';
 
-  // Open loans (all time)
-  const loanMap={};
+  // ── Open loans — both directions, all time ──────────────────
+  const givenMap={},takenMap={};
   data.loans.forEach(r=>{
-    if(r.type==='Loan Given')loanMap[r.party]=(loanMap[r.party]||0)+r.amount;
-    else if(r.type==='Loan Repaid')loanMap[r.party]=(loanMap[r.party]||0)-r.amount;
+    if(r.type==='Loan Given')givenMap[r.party]=(givenMap[r.party]||0)+r.amount;
+    else if(r.type==='Loan Repaid')givenMap[r.party]=(givenMap[r.party]||0)-r.amount;
+    else if(r.type==='Loan Taken')takenMap[r.party]=(takenMap[r.party]||0)+r.amount;
+    else if(r.type==='Loan Repaid by Me')takenMap[r.party]=(takenMap[r.party]||0)-r.amount;
   });
-  const openLoans=Object.entries(loanMap).filter(e=>e[1]>0.5);
-  document.getElementById('loan-list').innerHTML=openLoans.length
-    ?openLoans.map(e=>`<div class="loan-row"><span style="font-weight:500">${e[0]}</span><span class="pill pill-out">Given</span><span style="font-family:var(--mono);font-weight:500">${fmt(e[1])}</span></div>`).join('')
-    :'<div class="empty">No open loans</div>';
+  const openGiven=Object.entries(givenMap).filter(e=>e[1]>0.5).sort((a,b)=>b[1]-a[1]);
+  const openTaken=Object.entries(takenMap).filter(e=>e[1]>0.5).sort((a,b)=>b[1]-a[1]);
+
+  let lHTML='';
+  if(!openGiven.length&&!openTaken.length){
+    lHTML='<div class="empty">No open loans</div>';
+  } else {
+    if(openGiven.length){
+      lHTML+=`<div class="loan-section-label">They owe you</div>`;
+      lHTML+=openGiven.map(e=>`
+        <div class="loan-row">
+          <span class="loan-name">${e[0]}</span>
+          <span class="pill pill-out">Given</span>
+          <span class="loan-amt">${fmt(e[1])}</span>
+        </div>`).join('');
+    }
+    if(openGiven.length&&openTaken.length){
+      lHTML+=`<div class="loan-divider"></div>`;
+    }
+    if(openTaken.length){
+      lHTML+=`<div class="loan-section-label"${openGiven.length?'':''}>You owe</div>`;
+      lHTML+=openTaken.map(e=>`
+        <div class="loan-row">
+          <span class="loan-name">${e[0]}</span>
+          <span class="pill pill-in">Taken</span>
+          <span class="loan-amt" style="color:var(--red)">${fmt(e[1])}</span>
+        </div>`).join('');
+    }
+  }
+  document.getElementById('loan-list').innerHTML=lHTML;
 }
 
 async function addRow(tab){
